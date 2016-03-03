@@ -1,0 +1,7 @@
+{
+  "name": "retractor",
+  "version": "0.0.1",
+  "description": "Expose react internals for E2E testing",
+  "main": "index.js",
+  "license": "MIT"
+}
