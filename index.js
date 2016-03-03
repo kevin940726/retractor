@@ -15,6 +15,7 @@ window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
       components: components
     };
 
+    // Delegate to real devtools (if present)
     if (typeof devtools !== 'undefined'
       && typeof devtools.inject === 'function') {
       devtools.inject(renderer);
@@ -31,27 +32,3 @@ function decorate(obj, attr, fn) {
   };
   return old;
 }
-
-/*
-{
-    ComponentTree: {
-      getClosestInstanceFromNode:
-        ReactDOMComponentTree.getClosestInstanceFromNode,
-      getNodeFromInstance: function(inst) {
-        // inst is an internal instance (but could be a composite)
-        if (inst._renderedComponent) {
-          inst = getNativeComponentFromComposite(inst);
-        }
-        if (inst) {
-          return ReactDOMComponentTree.getNodeFromInstance(inst);
-        } else {
-          return null;
-        }
-      },
-    },
-    Mount: ReactMount,
-    Reconciler: ReactReconciler,
-  });
-}
-*/
-//Object.keys(__retractor.cache).map(k => __retractor.cache[k].exports).filter(e => e._instancesByReactRootID)[0]
