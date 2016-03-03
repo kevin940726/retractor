@@ -3,5 +3,8 @@
   "version": "0.0.1",
   "description": "Expose react internals for E2E testing",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "lodash.ismatch": "^4.1.1"
+  }
 }
