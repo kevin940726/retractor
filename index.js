@@ -1,3 +1,4 @@
+var isMatch = require('lodash.ismatch')
 var devtools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
 
 if (devtools) {
@@ -16,28 +17,46 @@ else {
 function inject(renderer) {
   window.__retractor = {
     renderer: renderer,
-    findAll(name, filter) {
-      var root = renderer.Mount._instancesByReactRootID['.0'];
-      return find(root, function(el) {
-        var inst = el._reactInternalInstance
-        return inst && inst.getName && inst.getName() === name;
-      })
-      .filter(function(inst) {
-        if (filter) {
-          if (filter.props) {
-            // TODO deeply match given props
-            for (var prop in filter.props) {
-              if (inst.props[prop] !== filter.props[prop]) return false;
-            }
-          }
-        }
-        return true;
-      })
-      .map(function(inst) {
-        return renderer.Mount.getNodeFromInstance(inst);
-      });
+    findAllComponents: function(name, filter) {
+      return findAllComponentsInternal(renderer, name).filter(componentFilter(filter));
+    },
+    findOneComponent: function(name, filter) {
+      var result = this.findAllComponents(name, filter);
+      if(result.length >= 1) return result[0];
+    },
+    findAllDOMNodes: function(name, filter) {
+      return this.findAllComponents(name, filter)
+        .map(function(inst) {
+          return renderer.Mount.getNodeFromInstance(inst);
+        });
+    },
+    findOneDOMNode: function(name, filter) {
+      var result = this.findAllDOMNodes(name, filter);
+      if(result.length >= 1) return result[0];
     }
   };
+}
+
+function findAllComponentsInternal(renderer, name) {
+  var root = renderer.Mount._instancesByReactRootID['.0'];
+  return find(root, function(el) {
+    var inst = el._reactInternalInstance
+    if(!name) return inst && inst.getName;
+    return inst && inst.getName && inst.getName() === name;
+  })
+}
+
+function componentFilter(filter) {
+  return function(inst) {
+    if (filter) {
+      if (filter.props) {
+        for (var prop in filter.props) {
+          return isMatch(inst.props[prop], filter.props[prop]);
+        }
+      }
+    }
+    return true;
+  }
 }
 
 function isDOMComponent(inst) {
