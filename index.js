@@ -1,15 +1,17 @@
-var isMatch = require('lodash.ismatch');
+var deepMatch = require('deep-match');
 
 // Keep a reference to the real devtools
 var devtools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
 
 if (devtools) {
+  // Overwrite the inject method to get hold of the renderer
   var _inject = devtools.inject;
   devtools.inject = function (renderer) {
     inject(renderer);
     _inject.call(devtools, renderer);
   };
 } else {
+  // Create a fake devtools hook
   window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
     inject: inject
   };
@@ -19,7 +21,10 @@ function inject(renderer) {
   window.__retractor = {
     renderer: renderer,
     findAllComponents: function (name, filter) {
-      return findAllComponentsInternal(renderer, name).filter(componentFilter(filter));
+      return findAllComponentsInternal(renderer, name)
+        .filter(function (inst) {
+          return !filter || deepMatch(inst, filter);
+        });
     },
     findOneComponent: function (name, filter) {
       var result = this.findAllComponents(name, filter);
@@ -45,19 +50,6 @@ function findAllComponentsInternal(renderer, name) {
     if (!name) return inst && inst.getName;
     return inst && inst.getName && inst.getName() === name;
   });
-}
-
-function componentFilter(filter) {
-  return function (inst) {
-    if (filter) {
-      if (filter.props) {
-        for (var prop in filter.props) {
-          return isMatch(inst.props[prop], filter.props[prop]);
-        }
-      }
-    }
-    return true;
-  };
 }
 
 /**
