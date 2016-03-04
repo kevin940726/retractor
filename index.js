@@ -1,14 +1,15 @@
-var isMatch = require('lodash.ismatch')
+var isMatch = require('lodash.ismatch');
+
+// Keep a reference to the real devtools
 var devtools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
 
 if (devtools) {
   var _inject = devtools.inject;
-  devtools.inject = function(renderer) {
+  devtools.inject = function (renderer) {
     inject(renderer);
     _inject.call(devtools, renderer);
-  }
-}
-else {
+  };
+} else {
   window.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {
     inject: inject
   };
@@ -17,37 +18,37 @@ else {
 function inject(renderer) {
   window.__retractor = {
     renderer: renderer,
-    findAllComponents: function(name, filter) {
+    findAllComponents: function (name, filter) {
       return findAllComponentsInternal(renderer, name).filter(componentFilter(filter));
     },
-    findOneComponent: function(name, filter) {
+    findOneComponent: function (name, filter) {
       var result = this.findAllComponents(name, filter);
-      if(result.length >= 1) return result[0];
+      if (result.length >= 1) return result[0];
     },
-    findAllDOMNodes: function(name, filter) {
+    findAllDOMNodes: function (name, filter) {
       return this.findAllComponents(name, filter)
-        .map(function(inst) {
+        .map(function (inst) {
           return renderer.Mount.getNodeFromInstance(inst);
         });
     },
-    findOneDOMNode: function(name, filter) {
+    findOneDOMNode: function (name, filter) {
       var result = this.findAllDOMNodes(name, filter);
-      if(result.length >= 1) return result[0];
+      if (result.length >= 1) return result[0];
     }
   };
 }
 
 function findAllComponentsInternal(renderer, name) {
   var root = renderer.Mount._instancesByReactRootID['.0'];
-  return find(root, function(el) {
-    var inst = el._reactInternalInstance
-    if(!name) return inst && inst.getName;
+  return find(root, function (el) {
+    var inst = el._reactInternalInstance;
+    if (!name) return inst && inst.getName;
     return inst && inst.getName && inst.getName() === name;
-  })
+  });
 }
 
 function componentFilter(filter) {
-  return function(inst) {
+  return function (inst) {
     if (filter) {
       if (filter.props) {
         for (var prop in filter.props) {
@@ -56,19 +57,31 @@ function componentFilter(filter) {
       }
     }
     return true;
-  }
+  };
 }
 
+/**
+ * This is an internal function taken from React TestUtils. See:
+ * https://github.com/facebook/react/blob/v0.14.7/src/test/ReactTestUtils.js#L100
+ */
 function isDOMComponent(inst) {
   return !!(inst && inst.nodeType === 1 && inst.tagName);
 }
 
+/**
+ * The Symbol used to tag the ReactElement type. See:
+ * https://github.com/facebook/react/blob/v0.14.7/src/isomorphic/classic/element/ReactElement.js#L21
+ */
 var REACT_ELEMENT_TYPE =
-  (typeof Symbol === 'function'
+  (typeof Symbol === 'function' /* global Symbol */
   && Symbol.for
   && Symbol.for('react.element'))
   || 0xeac7;
 
+/**
+ * True if `object` is a valid component. See:
+ * https://github.com/facebook/react/blob/v0.14.7/src/isomorphic/classic/element/ReactElement.js#L279
+ */
 function isValidElement(object) {
   return (
     typeof object === 'object' &&
@@ -76,6 +89,7 @@ function isValidElement(object) {
     object.$$typeof === REACT_ELEMENT_TYPE
   );
 }
+
 /**
  * This is an internal function taken from React TestUtils. See:
  * https://github.com/facebook/react/blob/v0.14.7/src/test/ReactTestUtils.js#L41

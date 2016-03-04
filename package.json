@@ -6,5 +6,9 @@
   "license": "MIT",
   "dependencies": {
     "lodash.ismatch": "^4.1.1"
+  },
+  "devDependencies": {
+    "eslint": "^2.2.0",
+    "eslint-config-airbnb": "^6.0.2"
   }
 }
