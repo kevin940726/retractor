@@ -14,10 +14,12 @@ npm install --save retractor
 ```
 
 ## Usage
-Retractor consists out of two parts - a client and a query module. The client needs to be integrated in your React App (SUT) to expose its internal component structure. The query module provides [selenium-webdriver][2] locators to query the client API.
+Retractor consists out of two parts - a client and a query DSL. The client needs to be integrated in your React App (System Under Test (SUT)) to expose its internal component structure. The query DSL provides a JSX based query language to located the DOM Nodes of your React components with [selenium-webdriver][2] locators.
 
-### Client
-To setup the client module you must load _retractor_ before React gets loaded. In [webpack][3] you can use an entry like this:
+### Retractor Client
+To setup the client module you must load Retractor before React gets loaded. Internally it uses the React Dev-Tools hooks to expose the rendered component tree of your application.
+
+In a [webpack][3] based setup use the entry setting to inject Retractor before your application entry:
 
 ```javascript
 module.exports = {
@@ -32,8 +34,9 @@ module.exports = {
   }
 }
 ```
-### Query
-Once the _retractor_ client module is integrated in your React Application you can easily use the selenium webdriver to query your components in your tests like this:
+
+### Retractor Query DSL
+Once the Retractor client module is integrated in your React Application you can easily use the query DSL in combination with selenium-webdriver locators to resolve the DOM Nodes of your components:
 
 ```javascript
 /* eslint-env mocha */
@@ -70,16 +73,35 @@ describe('Retractor E2E testing', function() {
 ## API
 
 ### Client
-##### `findAllComponents(name? : String, filter? : Object) : Array<Component>`
+Once the Retractor client gets loaded, it exposes a global `__retractor` instance with the following API.
 
-##### `findOneComponent(name? : String, filter? : Object) : Array<Component>`
+- `findAllComponents(name? : String, filter? : Object) : Array<Component>`
 
-##### `findAllDOMNodes(name? : String, filter? : Object) : Array<Element>`
+- `findOneComponent(name? : String, filter? : Object) : Array<Component>`
 
-##### `findOneDOMNode(name? : String, filter? : Object) : Array<Element>`
+- `findAllDOMNodes(name? : String, filter? : Object) : Array<Element>`
 
+- `findOneDOMNode(name? : String, filter? : Object) : Array<Element>`
 
+#### Arguments
+###### `name : String`
+Optional name of the component to resolve. If null, all available Component types will be resolved.
+
+###### `filter : Object`
+Optional filter criteria, to filter components with a specific state or props, i.e.:
+
+```javascript
+- {props : {todo : {id : 123}}}
+- {props : {todo : {id : 456}}, state : {showItem : true}}
+```
+
+The filtering is based on the [deep-match][4] library which also supports regular expressions for filtering.
+
+### Query DSL
+
+//TODO
 
 [1]: https://en.wikipedia.org/wiki/Retractor_(medical)
 [2]: https://github.com/SeleniumHQ/selenium
 [3]: https://github.com/webpack/webpack
+[4]: https://github.com/fgnass/deep-match
