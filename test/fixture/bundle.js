@@ -135,8 +135,8 @@
 	  if (!inst || !inst.getPublicInstance) {
 	    return [];
 	  }
-	  var publicInst = inst.getPublicInstance();
-	  var ret = test(publicInst) ? [publicInst] : [];
+	  var publicInst = inst.getPublicInstance() || inst._instance;
+	  var ret = publicInst && test(publicInst) ? [publicInst] : [];
 	  var currentElement = inst._currentElement;
 	  if (isDOMComponent(publicInst)) {
 	    var renderedChildren = inst._renderedChildren;
@@ -19866,23 +19866,15 @@
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	var React = __webpack_require__(4);
 
-	exports.default = function (props) {
-	  return _react2.default.createElement(
+	module.exports = function TodoItem(props) {
+	  return React.createElement(
 	    'li',
 	    null,
 	    props.text
 	  );
 	};
-
-	var _react = __webpack_require__(4);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }
 /******/ ]);
