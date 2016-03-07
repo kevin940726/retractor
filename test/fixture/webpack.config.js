@@ -1,15 +1,15 @@
 module.exports = {
   entry: [
     '../../client',
-    './app.js'
+    './app.js',
   ],
   output: {
     path: __dirname,
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   module: {
     loaders: [
-      { test: /\.js$/, loader: 'babel' }
-    ]
-  }
+      { test: /\.js$/, loader: 'babel' },
+    ],
+  },
 };
