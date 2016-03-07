@@ -90,8 +90,8 @@ function find(inst, test) {
   if (!inst || !inst.getPublicInstance) {
     return [];
   }
-  var publicInst = inst.getPublicInstance();
-  var ret = test(publicInst) ? [publicInst] : [];
+  var publicInst = inst.getPublicInstance() || inst._instance;
+  var ret = publicInst && test(publicInst) ? [publicInst] : [];
   var currentElement = inst._currentElement;
   if (isDOMComponent(publicInst)) {
     var renderedChildren = inst._renderedChildren;
