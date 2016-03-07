@@ -7,7 +7,7 @@ const { one, all } = require('..');
 const TodoItem = require('./fixture/TodoItem');
 
 describe('retractor', () => {
-  const driver = new webdriver.Builder().forBrowser('chrome').build();
+  const driver = new webdriver.Builder().forBrowser('phantomjs').build();
 
   driver.get(`file://${__dirname}/fixture/index.html`);
 
