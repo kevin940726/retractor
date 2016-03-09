@@ -22,6 +22,9 @@
     "unexpected": "^10.10.1",
     "webpack": "^1.12.14"
   },
+  "peerDependencies": {
+    "react": "^0.14.7"
+  },
   "scripts": {
     "fixture": "cd test/fixture && webpack",
     "test": "mocha -t 60000 -r babel-register"
