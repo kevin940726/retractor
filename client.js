@@ -1,4 +1,5 @@
 var deepMatch = require('deep-match');
+var type = require('./type');
 
 // Keep a reference to the real devtools
 var devtools = window.__REACT_DEVTOOLS_GLOBAL_HOOK__;
@@ -54,36 +55,6 @@ function findAllComponentsInternal(renderer, name) {
 
 /**
  * This is an internal function taken from React TestUtils. See:
- * https://github.com/facebook/react/blob/v0.14.7/src/test/ReactTestUtils.js#L100
- */
-function isDOMComponent(inst) {
-  return !!(inst && inst.nodeType === 1 && inst.tagName);
-}
-
-/**
- * The Symbol used to tag the ReactElement type. See:
- * https://github.com/facebook/react/blob/v0.14.7/src/isomorphic/classic/element/ReactElement.js#L21
- */
-var REACT_ELEMENT_TYPE =
-  (typeof Symbol === 'function' /* global Symbol */
-  && Symbol.for
-  && Symbol.for('react.element'))
-  || 0xeac7;
-
-/**
- * True if `object` is a valid component. See:
- * https://github.com/facebook/react/blob/v0.14.7/src/isomorphic/classic/element/ReactElement.js#L279
- */
-function isValidElement(object) {
-  return (
-    typeof object === 'object' &&
-    object !== null &&
-    object.$$typeof === REACT_ELEMENT_TYPE
-  );
-}
-
-/**
- * This is an internal function taken from React TestUtils. See:
  * https://github.com/facebook/react/blob/v0.14.7/src/test/ReactTestUtils.js#L41
  */
 function find(inst, test) {
@@ -93,7 +64,7 @@ function find(inst, test) {
   var publicInst = inst.getPublicInstance() || inst._instance;
   var ret = publicInst && test(publicInst) ? [publicInst] : [];
   var currentElement = inst._currentElement;
-  if (isDOMComponent(publicInst)) {
+  if (type.isDOMComponent(publicInst)) {
     var renderedChildren = inst._renderedChildren;
     var key;
     for (key in renderedChildren) {
@@ -108,7 +79,7 @@ function find(inst, test) {
       );
     }
   } else if (
-    isValidElement(currentElement) &&
+    type.isValidElement(currentElement) &&
     typeof currentElement.type === 'function'
   ) {
     ret = ret.concat(

@@ -1,23 +1,26 @@
 const expect = require('unexpected');
 const React = require('react');
-const webdriver = require('selenium-webdriver');
+const selene = require('selene');
 
-const { one, all } = require('..');
+const retractor = require('../selene');
 
 const TodoItem = require('./fixture/TodoItem');
 
 describe('retractor', () => {
-  const driver = new webdriver.Builder().forBrowser('phantomjs').build();
+  const se = selene().use(retractor);
 
-  driver.get(`file://${__dirname}/fixture/index.html`);
+  beforeEach(() => {
+    se.goto(`file://${__dirname}/fixture/index.html`);
+    se.wait(retractor.isInstalled);
+  });
 
   it('should find a single element', () => {
-    const item = driver.findElement(one(<TodoItem />));
-    return expect(item, 'when fulfilled', 'to be a', webdriver.WebElement);
+    const item = se.find(<TodoItem />);
+    return expect(item, 'when fulfilled', 'to be a', selene.webdriver.WebElement);
   });
 
   it('should find all elements', () => {
-    const items = driver.findElements(all(<TodoItem />));
+    const items = se.findAll(<TodoItem />);
     return expect(items, 'when fulfilled', 'to have length', 2);
   });
 });
