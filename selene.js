@@ -8,9 +8,3 @@ module.exports = function (selene) {
     }
   });
 };
-
-module.exports.isInstalled = function (driver) {
-  return driver.executeScript(function () {
-    return window && !!window.__retractor;
-  });
-};

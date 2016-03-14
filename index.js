@@ -8,7 +8,8 @@ exports.one = function one(el) {
   return function (driver) {
     return driver.executeScript(
       function (name, filterString) {
-        return window.__retractor.findOneDOMNode(name, eval(filterString));
+        return window && window.__retractor
+          && window.__retractor.findOneDOMNode(name, eval(filterString));
       },
       el.type.name, filter
     );
@@ -20,7 +21,8 @@ exports.all = function one(el) {
   return function (driver) {
     return driver.executeScript(
       function (name, filterString) {
-        return window.__retractor.findAllDOMNodes(name, eval(filterString));
+        return window && window.__retractor
+          && window.__retractor.findAllDOMNodes(name, eval(filterString));
       },
       el.type.name, filter
     );

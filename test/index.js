@@ -11,7 +11,6 @@ describe('retractor', () => {
 
   beforeEach(() => {
     se.goto(`file://${__dirname}/fixture/index.html`);
-    se.wait(retractor.isInstalled);
   });
 
   it('should find a single element', () => {
