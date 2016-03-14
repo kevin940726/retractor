@@ -15,7 +15,7 @@ describe('retractor', () => {
   });
 
   it('should find a single element', () => {
-    const item = se.find(<TodoItem />);
+    const item = se.find(<TodoItem text={/React/} />);
     return expect(item, 'when fulfilled', 'to be a', selene.webdriver.WebElement);
   });
 

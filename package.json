@@ -2,10 +2,13 @@
   "name": "retractor",
   "version": "0.0.1",
   "description": "Expose react internals for E2E testing",
+  "repository": "LiquidLabsGmbH/retractor",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "deep-match": "^1.0.0"
+    "deep-match": "^1.0.0",
+    "escodegen": "^1.8.0",
+    "lave": "^1.1.9"
   },
   "devDependencies": {
     "babel-core": "^6.6.4",
