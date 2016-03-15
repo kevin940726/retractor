@@ -1,30 +1,27 @@
-var generate = require('escodegen').generate;
-var lave = require('lave');
+var uneval = require('./uneval');
 
 /* global __retractor */
 /* eslint-disable no-eval */
 exports.one = function one(el) {
-  var filter = lave({ props: el.props }, { generate: generate });
   return function (driver) {
     return driver.executeScript(
-      function (name, filterString) {
+      function (name, filter) {
         return window && window.__retractor
-          && window.__retractor.findOneDOMNode(name, eval(filterString));
+          && window.__retractor.findOneDOMNode(name, eval(filter));
       },
-      el.type.name, filter
+      el.type.name, uneval({ props: el.props })
     );
   };
 };
 
 exports.all = function one(el) {
-  var filter = lave({ props: el.props }, { generate: generate });
   return function (driver) {
     return driver.executeScript(
-      function (name, filterString) {
+      function (name, filter) {
         return window && window.__retractor
-          && window.__retractor.findAllDOMNodes(name, eval(filterString));
+          && window.__retractor.findAllDOMNodes(name, eval(filter));
       },
-      el.type.name, filter
+      el.type.name, uneval({ props: el.props })
     );
   };
 };
