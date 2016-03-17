@@ -20,8 +20,8 @@ describe('retractor', () => {
   });
 
   it('should find all elements', () => {
-    const items = se.findAll(<TodoItem />);
-    return expect(items, 'when fulfilled', 'to have length', 3);
+    const items = se.findAll(<TodoList />);
+    return expect(items, 'when fulfilled', 'to have length', 2);
   });
 
   it('should provide a descriptive error message', () => {
@@ -34,5 +34,10 @@ describe('retractor', () => {
   it('should limit results to the given scope', () => {
     const el = se.find(<TodoList id="2" />).find(<TodoItem text={/Retractor/} />);
     return expect(el.getText(), 'to be fulfilled with', 'Use Retractor Scoping');
+  });
+
+  it('should support arbitrary filters', () => {
+    const inivisible = se.findAll({ react: <TodoItem />, visible: false });
+    return expect(inivisible, 'when fulfilled', 'to have length', 1);
   });
 });

@@ -12,6 +12,7 @@ function App() {
       </TodoList>
       <TodoList id="2">
         <TodoItem text="Use Retractor Scoping" />
+        <TodoItem text="Top Secret" hidden />
       </TodoList>
     </div>
   );

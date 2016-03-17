@@ -4,7 +4,8 @@ var uneval = require('./uneval');
 var type = require('./type');
 
 module.exports = function (selene) {
-  selene.addLocator(function (el) {
+  selene.addLocator(function (obj) {
+    var el = obj.react || obj;
     if (type.isValidElement(el)) {
       var filter = '';
       if (el.props) filter = ' props={' + uneval(el.props) + '}';
