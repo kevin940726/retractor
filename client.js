@@ -21,25 +21,17 @@ if (devtools) {
 function inject(renderer) {
   window.__retractor = {
     renderer: renderer,
-    findAllComponents: function (name, filter) {
+    findAllDOMNodes: function (name, filter, scope) {
       return findAllComponentsInternal(renderer, name)
         .filter(function (inst) {
           return !filter || deepMatch(inst, filter);
-        });
-    },
-    findOneComponent: function (name, filter) {
-      var result = this.findAllComponents(name, filter);
-      if (result.length >= 1) return result[0];
-    },
-    findAllDOMNodes: function (name, filter) {
-      return this.findAllComponents(name, filter)
+        })
         .map(function (inst) {
           return renderer.Mount.getNodeFromInstance(inst);
+        })
+        .filter(function (node) {
+          return !scope || scope.contains(node);
         });
-    },
-    findOneDOMNode: function (name, filter) {
-      var result = this.findAllDOMNodes(name, filter);
-      if (result.length >= 1) return result[0];
     }
   };
 }

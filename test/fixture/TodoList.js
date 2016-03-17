@@ -1,11 +1,9 @@
-import React from 'react';
-import TodoItem from './TodoItem';
+const React = require('react');
 
-export default function () {
+module.exports = function TodoList(props) {
   return (
     <ul>
-      <TodoItem text="Test React App" />
-      <TodoItem text="Use Retractor" />
+      {props.children}
     </ul>
   );
-}
+};

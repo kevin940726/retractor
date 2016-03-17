@@ -2,26 +2,26 @@ var uneval = require('./uneval');
 
 /* global __retractor */
 /* eslint-disable no-eval */
-exports.one = function one(el) {
+
+exports.all = function (el) {
+  var name = el.type.name;
+  var filter = uneval({ props: el.props });
+
   return function (driver) {
-    return driver.executeScript(
-      function (name, filter) {
-        return window && window.__retractor
-          && window.__retractor.findOneDOMNode(name, eval(filter));
-      },
-      el.type.name, uneval({ props: el.props })
-    );
+    if (isWebElementPromise(driver)) {
+      return driver.then(function (element) {
+        return element.getDriver().executeScript(findDOMNodes, name, filter, element);
+      });
+    }
+    return driver.executeScript(findDOMNodes, name, filter);
   };
 };
 
-exports.all = function one(el) {
-  return function (driver) {
-    return driver.executeScript(
-      function (name, filter) {
-        return window && window.__retractor
-          && window.__retractor.findAllDOMNodes(name, eval(filter));
-      },
-      el.type.name, uneval({ props: el.props })
-    );
-  };
-};
+function isWebElementPromise(obj) {
+  return obj.getId && obj.then;
+}
+
+function findDOMNodes(name, filter, scope) {
+  return window && window.__retractor
+    && window.__retractor.findAllDOMNodes(name, eval(filter), scope);
+}
