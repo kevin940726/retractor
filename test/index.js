@@ -37,7 +37,7 @@ describe('retractor', () => {
   });
 
   it('should support arbitrary filters', () => {
-    const inivisible = se.findAll({ react: <TodoItem />, visible: false });
+    const inivisible = se.findAll(<TodoItem />, { visible: false });
     return expect(inivisible, 'when fulfilled', 'to have length', 1);
   });
 });
