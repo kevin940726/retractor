@@ -1,9 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
-import classNames from 'classnames';
 
 const ESCAPE_KEY = 27;
 const ENTER_KEY = 13;
+
+const resolveItemStyle = (props) => {
+  const completed = props.todo.completed ? 'completed' : '';
+  const editing = props.editing ? 'editing' : '';
+  return `${completed} ${editing}`;
+};
 
 class TodoItem extends Component {
 
@@ -79,11 +84,7 @@ class TodoItem extends Component {
 
   render() {
     return (
-      <li className={classNames({
-        completed: this.props.todo.completed,
-        editing: this.props.editing,
-      })}
-      >
+      <li className={resolveItemStyle(this.props)}>
         <div className="view">
           <input
             className="toggle"

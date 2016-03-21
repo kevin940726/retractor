@@ -1,8 +1,11 @@
 import React, { PropTypes } from 'react';
-import classNames from 'classnames';
 import { pluralize } from './utils';
 
 import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS } from './constants';
+
+const isAllSelected = nowShowing => nowShowing === ALL_TODOS ? 'selected' : '';
+const isActiveSelected = nowShowing => nowShowing === ACTIVE_TODOS ? 'selected' : '';
+const isCompletedSelected = nowShowing => nowShowing === COMPLETED_TODOS ? 'selected' : '';
 
 function TodoFooter({ count, completedCount, onClearCompleted, nowShowing }) {
   const activeTodoWord = pluralize(count, 'item');
@@ -23,13 +26,13 @@ function TodoFooter({ count, completedCount, onClearCompleted, nowShowing }) {
       </span>
       <ul className="filters">
         <li>
-          <a href="#/" className={classNames({ selected: nowShowing === ALL_TODOS })}>
+          <a href="#/" className={isAllSelected(nowShowing)}>
               All
           </a>
         </li>
         {' '}
         <li>
-          <a href="#/active" className={classNames({ selected: nowShowing === ACTIVE_TODOS })}>
+          <a href="#/active" className={isActiveSelected(nowShowing)}>
               Active
           </a>
         </li>
@@ -37,7 +40,7 @@ function TodoFooter({ count, completedCount, onClearCompleted, nowShowing }) {
         <li>
           <a
             href="#/completed"
-            className={classNames({ selected: nowShowing === COMPLETED_TODOS })}
+            className={isCompletedSelected(nowShowing)}
           >
               Completed
           </a>
