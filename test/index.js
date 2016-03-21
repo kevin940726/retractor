@@ -27,7 +27,7 @@ describe('retractor', () => {
   it('should provide a descriptive error message', () => {
     const item = se.find(<TodoItem text={/Not found/} />);
     return expect(item, 'when rejected', 'to have message',
-      /Waiting for <TodoItem props=\{\(\{ 'text': \/Not found\/ \}\)\} \/>/
+      /No such element: <TodoItem props=\{\(\{ 'text': \/Not found\/ \}\)\} \/>/
     );
   });
 
