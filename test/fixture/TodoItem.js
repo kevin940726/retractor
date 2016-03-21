@@ -21,6 +21,8 @@ class TodoItem extends Component {
     this.handleEdit = this.handleEdit.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.onToggle = this.onToggle.bind(this);
+    this.onDestroy = this.onDestroy.bind(this);
   }
 
   /**
@@ -52,18 +54,30 @@ class TodoItem extends Component {
     }
   }
 
+  onToggle() {
+    const { todo } = this.props;
+    this.props.onToggle(todo);
+  }
+
+  onDestroy() {
+    const { todo } = this.props;
+    this.props.onDestroy(todo);
+  }
+
   handleSubmit() {
+    const { todo } = this.props;
     const val = this.state.editText.trim();
     if (val) {
-      this.props.onSave(val);
+      this.props.onSave(todo, val);
       this.setState({ editText: val });
     } else {
-      this.props.onDestroy();
+      this.props.onDestroy(todo);
     }
   }
 
   handleEdit() {
-    this.props.onEdit();
+    const { todo } = this.props;
+    this.props.onEdit(todo);
     this.setState({ editText: this.props.todo.title });
   }
 
@@ -90,12 +104,12 @@ class TodoItem extends Component {
             className="toggle"
             type="checkbox"
             checked={this.props.todo.completed}
-            onChange={this.props.onToggle}
+            onChange={this.onToggle}
           />
           <label onDoubleClick={this.handleEdit}>
             {this.props.todo.title}
           </label>
-          <button className="destroy" onClick={this.props.onDestroy} />
+          <button className="destroy" onClick={this.onDestroy} />
         </div>
         <input
           ref="editField"

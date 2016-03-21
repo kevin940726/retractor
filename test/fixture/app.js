@@ -15,6 +15,9 @@ class TodoApp extends Component {
     this.save = this.save.bind(this);
     this.cancel = this.cancel.bind(this);
     this.destroy = this.destroy.bind(this);
+    this.toggle = this.toggle.bind(this);
+    this.toggleAll = this.toggleAll.bind(this);
+    this.clearCompleted = this.clearCompleted.bind(this);
     this.state = {
       nowShowing: ALL_TODOS,
       editing: null,
