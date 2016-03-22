@@ -3,19 +3,13 @@ import { render } from 'react-dom';
 import TodoModel from './TodoModel';
 import TodoApp from './TodoApp';
 
-const model = new TodoModel('react-todos');
+const list1 = new TodoModel('todolist-1');
+const list2 = new TodoModel('todolist-2');
 import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS } from './constants';
-
-function renderApp(route) {
-  render(
-    <TodoApp model={ model } route={route} />,
-    document.getElementById('app')
-  );
-}
 
 const getHashRoute = () => {
   const hash = document.location.hash;
-  const route = hash.substring(2); // TODO improve
+  const route = hash.substring(2); // trim '/#'
 
   switch (route) {
     case COMPLETED_TODOS:
@@ -27,11 +21,22 @@ const getHashRoute = () => {
   }
 };
 
-window.onpopstate = function handler() {
+function renderApp() {
   const route = getHashRoute();
-  renderApp(route);
+  render(
+    <TodoApp model={ list1 } route={route} />,
+    document.getElementById('app-1')
+  );
+  render(
+    <TodoApp model={ list2 } route={route} />,
+    document.getElementById('app-2')
+  );
+}
+
+window.onpopstate = function handler() {
+  renderApp();
 };
 
-
-model.subscribe(renderApp);
-renderApp(getHashRoute());
+list1.subscribe(renderApp);
+list2.subscribe(renderApp);
+renderApp();
