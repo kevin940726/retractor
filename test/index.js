@@ -4,6 +4,7 @@ import selene from 'selene';
 import retractor from '../selene';
 
 import TodoItem from './fixture/TodoItem';
+import TodoApp from './fixture/TodoApp';
 
 describe('retractor', () => {
   const se = selene().use(retractor);
@@ -71,5 +72,11 @@ describe('retractor', () => {
       'li', { text: /^Use Retractor$/ }
     );
     return expect(items, 'when fulfilled', 'to have length', 1);
+  });
+
+  it('should limit results to the given scope', () => {
+    const el = se.find(<TodoApp model={{ key: 'todolist-2' }} />)
+                 .find(<TodoItem todo={{ title: /Retractor/ }} />);
+    return expect(el.getText(), 'to be fulfilled with', 'Use Retractor Scoping');
   });
 });
