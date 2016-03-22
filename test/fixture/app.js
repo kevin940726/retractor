@@ -1,27 +1,22 @@
 import React, { Component, PropTypes } from 'react';
 import { Router } from 'director';
+import Header from './Header';
+import Main from './Main';
 import TodoFooter from './Footer';
-import TodoItem from './TodoItem';
 
-import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS, ENTER_KEY } from './constants';
+import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS } from './constants';
 
 class TodoApp extends Component {
 
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleNewTodoKeyDown = this.handleNewTodoKeyDown.bind(this);
-    this.edit = this.edit.bind(this);
     this.save = this.save.bind(this);
-    this.cancel = this.cancel.bind(this);
     this.destroy = this.destroy.bind(this);
     this.toggle = this.toggle.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
     this.clearCompleted = this.clearCompleted.bind(this);
     this.state = {
       nowShowing: ALL_TODOS,
-      editing: null,
-      newTodo: '',
     };
   }
 
@@ -33,25 +28,6 @@ class TodoApp extends Component {
       '/completed': setState.bind(this, { nowShowing: COMPLETED_TODOS }),
     });
     router.init('/');
-  }
-
-  handleChange(event) {
-    this.setState({ newTodo: event.target.value });
-  }
-
-  handleNewTodoKeyDown(event) {
-    if (event.keyCode !== ENTER_KEY) {
-      return;
-    }
-
-    event.preventDefault();
-
-    const val = this.state.newTodo.trim();
-
-    if (val) {
-      this.props.model.addTodo(val);
-      this.setState({ newTodo: '' });
-    }
   }
 
   toggleAll(event) {
@@ -67,29 +43,16 @@ class TodoApp extends Component {
     this.props.model.destroy(todo);
   }
 
-  edit(todo) {
-    this.setState({ editing: todo.id });
-  }
-
   save(todoToSave, text) {
     this.props.model.save(todoToSave, text);
-    this.setState({ editing: null });
-  }
-
-  cancel() {
-    this.setState({ editing: null });
   }
 
   clearCompleted() {
     this.props.model.clearCompleted();
   }
 
-  render() {
-    let footer;
-    let main;
-    const { model: { todos } } = this.props;
-
-    const shownTodos = todos.filter(todo => {
+  resolveTodosByFilter(todos) {
+    return todos.filter(todo => {
       switch (this.state.nowShowing) {
         case ACTIVE_TODOS:
           return !todo.completed;
@@ -99,21 +62,9 @@ class TodoApp extends Component {
           return true;
       }
     });
+  }
 
-    const todoItems = shownTodos.map(todo =>
-        <TodoItem
-          key={todo.id}
-          todo={todo}
-          onToggle={this.toggle}
-          onDestroy={this.destroy}
-          onEdit={this.edit}
-          editing={this.state.editing === todo.id}
-          onSave={this.save}
-          onCancel={this.cancel}
-        />
-    );
-
-
+  renderFooter(todos) {
     const activeTodoCount = todos.reduce((accum, todo) => (
       todo.completed ? accum : accum + 1
     ), 0);
@@ -121,7 +72,7 @@ class TodoApp extends Component {
     const completedCount = todos.length - activeTodoCount;
 
     if (activeTodoCount || completedCount) {
-      footer = (
+      return (
         <TodoFooter
           count={activeTodoCount}
           completedCount={completedCount}
@@ -130,38 +81,25 @@ class TodoApp extends Component {
         />
       );
     }
+    return null;
+  }
 
-    if (todos.length) {
-      main = (
-        <section className="main">
-          <input
-            className="toggle-all"
-            type="checkbox"
-            onChange={this.toggleAll}
-            checked={activeTodoCount === 0}
-          />
-          <ul className="todo-list">
-            {todoItems}
-          </ul>
-        </section>
-      );
-    }
+  render() {
+    const { model } = this.props;
+    const { todos } = model;
+    const shownTodos = this.resolveTodosByFilter(todos);
+    const footer = this.renderFooter(todos);
 
     return (
       <div>
-        <header className="header">
-          <h1>todos</h1>
-          <input
-            className="new-todo"
-            placeholder="What needs to be done?"
-            value={this.state.newTodo}
-            onKeyDown={this.handleNewTodoKeyDown}
-            onChange={this.handleChange}
-            autoFocus
-          />
-        </header>
-        {main}
-        {footer}
+        <Header model={ model } />
+        <Main todos={shownTodos}
+          onToggle={this.toggle}
+          onToggleAll={this.toggleAll}
+          onDestroy={this.destroy}
+          onSave={this.save}
+        />
+      {footer}
       </div>
     );
   }
