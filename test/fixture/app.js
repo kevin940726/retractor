@@ -2,7 +2,7 @@
 import React, { PropTypes } from 'react';
 import { Router } from 'director';
 import Header from './Header';
-import Main from './Main';
+import TodoList from './TodoList';
 import TodoFooter from './Footer';
 
 import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS } from './constants';
@@ -92,7 +92,7 @@ const TodoApp = React.createClass({
     return (
       <div>
         <Header model={ model } />
-        <Main todos={shownTodos}
+        <TodoList todos={shownTodos}
           onToggle={this.toggle}
           onToggleAll={this.toggleAll}
           onDestroy={this.destroy}

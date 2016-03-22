@@ -2,7 +2,7 @@
 import React, { PropTypes } from 'react';
 import TodoItem from './TodoItem';
 
-const Main = React.createClass({
+const TodoList = React.createClass({
 
   propTypes: {
     todos: PropTypes.array.isRequired,
@@ -72,4 +72,4 @@ const Main = React.createClass({
   },
 });
 
-export default Main;
+export default TodoList;
