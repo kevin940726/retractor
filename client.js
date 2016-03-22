@@ -37,12 +37,17 @@ function inject(renderer) {
 }
 
 function findAllComponentsInternal(renderer, name) {
-  var root = renderer.Mount._instancesByReactRootID['.0'];
-  return find(root, function (el) {
-    var inst = el._reactInternalInstance;
-    if (!name) return inst && inst.getName;
-    return inst && inst.getName && inst.getName() === name;
+  var rootInstances = renderer.Mount._instancesByReactRootID;
+  var components = Object.keys(rootInstances).map(function (key) {
+    var root = rootInstances[key];
+
+    return find(root, function (el) {
+      var inst = el._reactInternalInstance;
+      if (!name) return inst && inst.getName;
+      return inst && inst.getName && inst.getName() === name;
+    });
   });
+  return [].concat.apply([], components); // flatten tree
 }
 
 /**
