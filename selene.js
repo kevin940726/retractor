@@ -8,8 +8,10 @@ module.exports = function (selene) {
     if (type.isValidElement(el)) {
       var filter = '';
       if (el.props) filter = ' props={' + uneval(el.props) + '}';
+      const componentName = el.type.displayName || el.type.name;
+
       return {
-        description: '<' + el.type.displayName + filter + ' />',
+        description: '<' + componentName + filter + ' />',
         by: retractor.all(el)
       };
     }
