@@ -4,7 +4,7 @@ var uneval = require('./uneval');
 /* eslint-disable no-eval */
 
 exports.all = function (el) {
-  var name = el.type.name;
+  var name = el.type.displayName;
   var filter = uneval({ props: el.props });
 
   return function (driver) {
