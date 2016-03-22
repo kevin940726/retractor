@@ -31,7 +31,7 @@
     "react": "^0.14.7"
   },
   "scripts": {
-    "fixture": "cd test/fixture && webpack",
+    "fixture": "cd test/fixture && webpack -d",
     "test": "npm run fixture && mocha -t 60000 -r babel-register"
   }
 }
