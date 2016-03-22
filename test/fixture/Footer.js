@@ -3,11 +3,11 @@ import { pluralize } from './utils';
 
 import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS } from './constants';
 
-const isAllSelected = nowShowing => nowShowing === ALL_TODOS ? 'selected' : '';
-const isActiveSelected = nowShowing => nowShowing === ACTIVE_TODOS ? 'selected' : '';
-const isCompletedSelected = nowShowing => nowShowing === COMPLETED_TODOS ? 'selected' : '';
+const isAllSelected = route => route === ALL_TODOS ? 'selected' : '';
+const isActiveSelected = route => route === ACTIVE_TODOS ? 'selected' : '';
+const isCompletedSelected = route => route === COMPLETED_TODOS ? 'selected' : '';
 
-function TodoFooter({ count, completedCount, onClearCompleted, nowShowing }) {
+function TodoFooter({ count, completedCount, onClearCompleted, route }) {
   const activeTodoWord = pluralize(count, 'item');
   let clearButton = null;
 
@@ -26,13 +26,13 @@ function TodoFooter({ count, completedCount, onClearCompleted, nowShowing }) {
       </span>
       <ul className="filters">
         <li>
-          <a href="#/" className={isAllSelected(nowShowing)}>
+          <a href="#/" className={isAllSelected(route)}>
               All
           </a>
         </li>
         {' '}
         <li>
-          <a href="#/active" className={isActiveSelected(nowShowing)}>
+          <a href="#/active" className={isActiveSelected(route)}>
               Active
           </a>
         </li>
@@ -40,7 +40,7 @@ function TodoFooter({ count, completedCount, onClearCompleted, nowShowing }) {
         <li>
           <a
             href="#/completed"
-            className={isCompletedSelected(nowShowing)}
+            className={isCompletedSelected(route)}
           >
               Completed
           </a>
@@ -55,7 +55,7 @@ TodoFooter.propTypes = {
   count: PropTypes.number.isRequired,
   completedCount: PropTypes.number.isRequired,
   onClearCompleted: PropTypes.func.isRequired,
-  nowShowing: PropTypes.string.isRequired,
+  route: PropTypes.string.isRequired,
 };
 
 export default TodoFooter;

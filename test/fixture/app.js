@@ -15,16 +15,16 @@ const TodoApp = React.createClass({
 
   getInitialState() {
     return {
-      nowShowing: ALL_TODOS,
+      route: ALL_TODOS,
     };
   },
 
   componentDidMount() {
     const setState = this.setState;
     const router = new Router({
-      '/': setState.bind(this, { nowShowing: ALL_TODOS }),
-      '/active': setState.bind(this, { nowShowing: ACTIVE_TODOS }),
-      '/completed': setState.bind(this, { nowShowing: COMPLETED_TODOS }),
+      '/': setState.bind(this, { route: ALL_TODOS }),
+      '/active': setState.bind(this, { route: ACTIVE_TODOS }),
+      '/completed': setState.bind(this, { route: COMPLETED_TODOS }),
     });
     router.init('/');
   },
@@ -52,7 +52,7 @@ const TodoApp = React.createClass({
 
   resolveTodosByFilter(todos) {
     return todos.filter(todo => {
-      switch (this.state.nowShowing) {
+      switch (this.state.route) {
         case ACTIVE_TODOS:
           return !todo.completed;
         case COMPLETED_TODOS:
@@ -75,7 +75,7 @@ const TodoApp = React.createClass({
         <TodoFooter
           count={activeTodoCount}
           completedCount={completedCount}
-          nowShowing={this.state.nowShowing}
+          route={this.state.route}
           onClearCompleted={this.clearCompleted}
         />
       );
