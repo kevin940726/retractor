@@ -1,17 +1,18 @@
-import React, { Component, PropTypes } from 'react';
-
+/* eslint-disable react/prefer-es6-class  */
+import React, { PropTypes } from 'react';
 import { ENTER_KEY } from './constants';
 
-class Header extends Component {
+const Header = React.createClass({
 
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleNewTodoKeyDown = this.handleNewTodoKeyDown.bind(this);
-    this.state = {
+  propTypes: {
+    model: PropTypes.object.isRequired,
+  },
+
+  getInitialState() {
+    return {
       newTodo: '',
     };
-  }
+  },
 
   handleNewTodoKeyDown(event) {
     if (event.keyCode !== ENTER_KEY) {
@@ -26,12 +27,11 @@ class Header extends Component {
       this.props.model.addTodo(val);
       this.setState({ newTodo: '' });
     }
-  }
+  },
 
   handleChange(event) {
     this.setState({ newTodo: event.target.value });
-  }
-
+  },
 
   render() {
     return (
@@ -47,12 +47,7 @@ class Header extends Component {
         />
       </header>
     );
-  }
-
-}
-
-Header.propTypes = {
-  model: PropTypes.object.isRequired,
-};
+  },
+});
 
 export default Header;

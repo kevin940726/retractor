@@ -1,36 +1,41 @@
-import React, { Component, PropTypes } from 'react';
+/* eslint-disable react/prefer-es6-class  */
+import React, { PropTypes } from 'react';
 import TodoItem from './TodoItem';
 
-class Main extends Component {
+const Main = React.createClass({
 
-  constructor(props) {
-    super(props);
-    this.state = {
+  propTypes: {
+    todos: PropTypes.array.isRequired,
+    onToggle: PropTypes.func.isRequired,
+    onToggleAll: PropTypes.func.isRequired,
+    onDestroy: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired,
+  },
+
+  getInitialState() {
+    return {
       editing: null,
     };
-    this.save = this.save.bind(this);
-    this.cancel = this.cancel.bind(this);
-    this.edit = this.edit.bind(this);
-  }
+  },
 
   edit(todo) {
     this.setState({ editing: todo.id });
-  }
+  },
 
   save(todoToSave, text) {
     this.props.onSave(todoToSave, text);
     this.setState({ editing: null });
-  }
+  },
 
   cancel() {
     this.setState({ editing: null });
-  }
+  },
 
   resolveActiveTodoCount(todos) {
     return todos.reduce((accum, todo) => (
       todo.completed ? accum : accum + 1
     ), 0);
-  }
+  },
 
   render() {
     const { todos, onToggle, onToggleAll, onDestroy } = this.props;
@@ -64,16 +69,7 @@ class Main extends Component {
       );
     }
     return null;
-  }
-
-}
-
-Main.propTypes = {
-  todos: PropTypes.array.isRequired,
-  onToggle: PropTypes.func.isRequired,
-  onToggleAll: PropTypes.func.isRequired,
-  onDestroy: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
-};
+  },
+});
 
 export default Main;

@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+/* eslint-disable react/prefer-es6-class  */
+import React, { PropTypes } from 'react';
 import { Router } from 'director';
 import Header from './Header';
 import Main from './Main';
@@ -6,19 +7,17 @@ import TodoFooter from './Footer';
 
 import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS } from './constants';
 
-class TodoApp extends Component {
+const TodoApp = React.createClass({
 
-  constructor(props) {
-    super(props);
-    this.save = this.save.bind(this);
-    this.destroy = this.destroy.bind(this);
-    this.toggle = this.toggle.bind(this);
-    this.toggleAll = this.toggleAll.bind(this);
-    this.clearCompleted = this.clearCompleted.bind(this);
-    this.state = {
+  propTypes: {
+    model: PropTypes.object.isRequired,
+  },
+
+  getInitialState() {
+    return {
       nowShowing: ALL_TODOS,
     };
-  }
+  },
 
   componentDidMount() {
     const setState = this.setState;
@@ -28,28 +27,28 @@ class TodoApp extends Component {
       '/completed': setState.bind(this, { nowShowing: COMPLETED_TODOS }),
     });
     router.init('/');
-  }
+  },
 
   toggleAll(event) {
     const checked = event.target.checked;
     this.props.model.toggleAll(checked);
-  }
+  },
 
   toggle(todoToToggle) {
     this.props.model.toggle(todoToToggle);
-  }
+  },
 
   destroy(todo) {
     this.props.model.destroy(todo);
-  }
+  },
 
   save(todoToSave, text) {
     this.props.model.save(todoToSave, text);
-  }
+  },
 
   clearCompleted() {
     this.props.model.clearCompleted();
-  }
+  },
 
   resolveTodosByFilter(todos) {
     return todos.filter(todo => {
@@ -62,7 +61,7 @@ class TodoApp extends Component {
           return true;
       }
     });
-  }
+  },
 
   renderFooter(todos) {
     const activeTodoCount = todos.reduce((accum, todo) => (
@@ -82,7 +81,7 @@ class TodoApp extends Component {
       );
     }
     return null;
-  }
+  },
 
   render() {
     const { model } = this.props;
@@ -102,11 +101,7 @@ class TodoApp extends Component {
       {footer}
       </div>
     );
-  }
-}
-
-TodoApp.propTypes = {
-  model: PropTypes.object.isRequired,
-};
+  },
+});
 
 export default TodoApp;
