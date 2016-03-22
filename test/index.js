@@ -54,7 +54,7 @@ describe('retractor', () => {
 
   it('should find all elements', () => {
     const items = se.findAll(<TodoItem />);
-    return expect(items, 'when fulfilled', 'to have length', 2);
+    return expect(items, 'when fulfilled', 'to have length', 4);
   });
 
   it('should provide a descriptive error message', () => {
