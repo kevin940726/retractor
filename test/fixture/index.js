@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import TodoModel from './TodoModel';
-import TodoApp from './App';
+import TodoApp from './TodoApp';
 
 const model = new TodoModel('react-todos');
 
