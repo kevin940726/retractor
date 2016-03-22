@@ -37,10 +37,9 @@ const TodoList = React.createClass({
     ), 0);
   },
 
-  render() {
-    const { todos, onToggle, onToggleAll, onDestroy } = this.props;
-    const activeTodoCount = this.resolveActiveTodoCount(todos);
-    const todoItems = todos.map(todo =>
+  renderTodoItems() {
+    const { todos, onToggle, onDestroy } = this.props;
+    return todos.map(todo =>
         <TodoItem
           key={todo.id}
           todo={todo}
@@ -52,6 +51,12 @@ const TodoList = React.createClass({
           onCancel={this.cancel}
         />
     );
+  },
+
+  render() {
+    const { todos, onToggleAll } = this.props;
+    const activeTodoCount = this.resolveActiveTodoCount(todos);
+
 
     if (todos.length) {
       return (
@@ -63,7 +68,7 @@ const TodoList = React.createClass({
             checked={activeTodoCount === 0}
           />
           <ul className="todo-list">
-            {todoItems}
+            {this.renderTodoItems()}
           </ul>
         </section>
       );
