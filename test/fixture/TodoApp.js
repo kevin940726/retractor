@@ -1,32 +1,16 @@
 /* eslint-disable react/prefer-es6-class  */
 import React, { PropTypes } from 'react';
-import { Router } from 'director';
 import Header from './Header';
 import TodoList from './TodoList';
 import TodoFooter from './Footer';
 
-import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS } from './constants';
+import { ACTIVE_TODOS, COMPLETED_TODOS } from './constants';
 
 const TodoApp = React.createClass({
 
   propTypes: {
     model: PropTypes.object.isRequired,
-  },
-
-  getInitialState() {
-    return {
-      route: ALL_TODOS,
-    };
-  },
-
-  componentDidMount() {
-    const setState = this.setState;
-    const router = new Router({
-      '/': setState.bind(this, { route: ALL_TODOS }),
-      '/active': setState.bind(this, { route: ACTIVE_TODOS }),
-      '/completed': setState.bind(this, { route: COMPLETED_TODOS }),
-    });
-    router.init('/');
+    route: PropTypes.string.isRequired,
   },
 
   toggleAll(event) {
@@ -52,7 +36,7 @@ const TodoApp = React.createClass({
 
   resolveTodosByFilter(todos) {
     return todos.filter(todo => {
-      switch (this.state.route) {
+      switch (this.props.route) {
         case ACTIVE_TODOS:
           return !todo.completed;
         case COMPLETED_TODOS:
@@ -75,7 +59,7 @@ const TodoApp = React.createClass({
         <TodoFooter
           count={activeTodoCount}
           completedCount={completedCount}
-          route={this.state.route}
+          route={this.props.route}
           onClearCompleted={this.clearCompleted}
         />
       );
