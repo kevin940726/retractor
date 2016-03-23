@@ -24,6 +24,6 @@ exports.isValidElement = function (object) {
  * This is an internal function taken from React TestUtils. See:
  * https://github.com/facebook/react/blob/v0.14.7/src/test/ReactTestUtils.js#L100
  */
-exports.isDOMComponent = function(inst) {
+exports.isDOMComponent = function (inst) {
   return !!(inst && inst.nodeType === 1 && inst.tagName);
 };
