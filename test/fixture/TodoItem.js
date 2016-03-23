@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react';
+/* eslint-disable react/prefer-es6-class  */
+import React, { PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 
 const ESCAPE_KEY = 27;
@@ -10,20 +11,23 @@ const resolveItemStyle = (props) => {
   return `${completed} ${editing}`;
 };
 
-class TodoItem extends Component {
+const TodoItem = React.createClass({
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      editText: props.todo.title,
+  propTypes: {
+    editing: PropTypes.bool.isRequired,
+    todo: PropTypes.object.isRequired,
+    onDestroy: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired,
+    onEdit: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    onToggle: PropTypes.func.isRequired,
+  },
+
+  getInitialState() {
+    return {
+      editText: this.props.todo.title,
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.onToggle = this.onToggle.bind(this);
-    this.onDestroy = this.onDestroy.bind(this);
-  }
+  },
 
   /**
    * This is a completely optional performance enhancement that you can
@@ -38,7 +42,7 @@ class TodoItem extends Component {
       nextProps.editing !== this.props.editing ||
       nextState.editText !== this.state.editText
     );
-  }
+  },
 
   /**
    * Safely manipulate the DOM after updating the state when invoking
@@ -52,17 +56,17 @@ class TodoItem extends Component {
       node.focus();
       node.setSelectionRange(node.value.length, node.value.length);
     }
-  }
+  },
 
   onToggle() {
     const { todo } = this.props;
     this.props.onToggle(todo);
-  }
+  },
 
   onDestroy() {
     const { todo } = this.props;
     this.props.onDestroy(todo);
-  }
+  },
 
   handleSubmit() {
     const { todo } = this.props;
@@ -73,13 +77,13 @@ class TodoItem extends Component {
     } else {
       this.props.onDestroy(todo);
     }
-  }
+  },
 
   handleEdit() {
     const { todo } = this.props;
     this.props.onEdit(todo);
     this.setState({ editText: this.props.todo.title });
-  }
+  },
 
   handleKeyDown(event) {
     if (event.which === ESCAPE_KEY) {
@@ -88,13 +92,13 @@ class TodoItem extends Component {
     } else if (event.which === ENTER_KEY) {
       this.handleSubmit(event);
     }
-  }
+  },
 
   handleChange(event) {
     if (this.props.editing) {
       this.setState({ editText: event.target.value });
     }
-  }
+  },
 
   render() {
     return (
@@ -121,17 +125,7 @@ class TodoItem extends Component {
         />
       </li>
     );
-  }
-}
-
-TodoItem.propTypes = {
-  editing: PropTypes.bool.isRequired,
-  todo: PropTypes.object.isRequired,
-  onDestroy: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
-  onEdit: PropTypes.func.isRequired,
-  onCancel: PropTypes.func.isRequired,
-  onToggle: PropTypes.func.isRequired,
-};
+  },
+});
 
 export default TodoItem;

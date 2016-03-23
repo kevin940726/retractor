@@ -1,7 +1,7 @@
 var uneval = require('./uneval');
 
 module.exports = function (el) {
-  var name = el.type.name;
+  var name = el.type.displayName || el.type.name;
   var filter = uneval({ props: el.props });
 
   return function (driver) {
