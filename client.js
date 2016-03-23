@@ -21,8 +21,8 @@ if (devtools) {
 function inject(renderer) {
   window.__retractor = {
     renderer: renderer,
-    findAllDOMNodes: function (name, filter, scope) {
-      return findAllComponentsInternal(renderer, name)
+    findDOMNodes: function (name, filter, scope) {
+      return findComponentsInternal(renderer, name)
         .filter(function (inst) {
           return !filter || deepMatch(inst, filter);
         })
@@ -36,7 +36,7 @@ function inject(renderer) {
   };
 }
 
-function findAllComponentsInternal(renderer, name) {
+function findComponentsInternal(renderer, name) {
   var root = renderer.Mount._instancesByReactRootID['.0'];
   return find(root, function (el) {
     var inst = el._reactInternalInstance;

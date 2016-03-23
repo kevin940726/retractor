@@ -10,7 +10,7 @@ module.exports = function (selene) {
       if (el.props) filter = ' props={' + uneval(el.props) + '}';
       return {
         description: '<' + el.type.name + filter + ' />',
-        by: retractor.all(el)
+        by: retractor(el)
       };
     }
   });

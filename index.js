@@ -1,9 +1,6 @@
 var uneval = require('./uneval');
 
-/* global __retractor */
-/* eslint-disable no-eval */
-
-exports.all = function (el) {
+module.exports = function (el) {
   var name = el.type.name;
   var filter = uneval({ props: el.props });
 
@@ -21,7 +18,9 @@ function isWebElementPromise(obj) {
   return obj.getId && obj.then;
 }
 
+/* global __retractor */
+/* eslint-disable no-eval */
 function findDOMNodes(name, filter, scope) {
   return window && window.__retractor
-    && window.__retractor.findAllDOMNodes(name, eval(filter), scope);
+    && window.__retractor.findDOMNodes(name, eval(filter), scope);
 }
