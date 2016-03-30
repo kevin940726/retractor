@@ -8,7 +8,7 @@ module.exports = function (selene) {
     if (type.isValidElement(el)) {
       var filter = '';
       if (el.props) filter = ' props={' + uneval(el.props) + '}';
-      const componentName = el.type.displayName || el.type.name;
+      var componentName = el.type.displayName || el.type.name;
 
       return {
         description: '<' + componentName + filter + ' />',
