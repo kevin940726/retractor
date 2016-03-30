@@ -77,7 +77,7 @@ driver.findElements(byJSX(<TodoItem />));
 ```
 
 #### Filter by props
-It is also possible to filter components based on their internal data structure (props). Just define the filter criteria as props in the JSX expression. For example, given two TodoItems, calling `byJSX` with props {complete: false} will return the one but not the other.
+It's also possible to filter components based on their internal data structure (props). Just define the filter criteria as props in the JSX expression. For example, given two TodoItems, calling `byJSX` with props `{complete: false}` will return the one but not the other.
 
 ```js
 driver.findElements(byJSX(<TodoItem todo={{ title: 'retractor' }} />));
@@ -101,9 +101,9 @@ driver.findElements(
 ```
 
 #### React warnings
-Note: While executing your tests you might encounter React warnings about not fulfilled `propTypes` of components you try to lookup. It's safe to ignore those because retractor will never execute or mount a component. It's rather a syntactic sugar DSL which gets translated by retractor internally to perform the query.
+Note: While executing your tests you might encounter React warnings about not-fulfilled `propTypes` of components that you're trying to lookup. It's safe to ignore those because retractor never actually executes or mounts a component. It simply offers JSX syntax as syntactic sugar, which gets translated by retractor internally to perform the query.
 
-A workaround to disable the warning is running your tests in a environment different to `development`
+A workaround to disable the warnings is running your tests in a environment other than `development`
 
 ```
 "scripts":
