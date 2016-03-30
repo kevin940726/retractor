@@ -59,9 +59,66 @@ driver.findElement(byJSX(
 ));
 ```
 
+### Features
+
+The Retractor JSX bindings allow to query the DOM nodes of your components in an intuitive way. You just have to write plain JSX expressions to search and filter the components you would like to interact with.
+
+#### Query
+To query components you have to use the `byJSX` locator.
+By default it will return all the DOM nodes of the mounted components matching that expression.
+
+```js
+import byJSX from 'retractor';
+import webdriver from 'selenium-webdriver';
+
+const driver = new webdriver.Builder()
+
+driver.findElements(byJSX(<TodoItem />));
+```
+
+#### Filter by props
+It is also possible to filter components based on their internal data structure (props). Just define the filter criteria as props in the JSX expression. For example, given two TodoItems, calling `byJSX` with props {complete: false} will return the one but not the other.
+
+```js
+driver.findElements(byJSX(<TodoItem todo={{ title: 'retractor' }} />));
+driver.findElements(byJSX(<TodoItem todo={{ title: 'retractor', completed: false }} />));
+driver.findElements(byJSX(<TodoItem editing />));
+```
+
+Retractor uses [deep-match][5] internally to support sophisticated filtering. This also allows you to use RegEx patterns for your prop filters.
+
+```js
+driver.findElements(byJSX(<TodoItem todo={{ title: /retractor/ }} />))
+```
+
+#### Scoped lookups
+//TODO verify and document
+```js
+driver.findElements(
+  byJSX(<TodoApp model={{ key: 'todolist-2' }} />)).then(
+  byJSX(<TodoItem todo={{ title: /Retractor/ }} />)
+);
+```
+
+#### React warnings
+Note: While executing your tests you might encounter React warnings about not fulfilled `propTypes` of components you try to lookup. It's safe to ignore those because retractor will never execute or mount a component. It's rather a syntactic sugar DSL which gets translated by retractor internally to perform the query.
+
+A workaround to disable the warning is running your tests in a environment different to `development`
+
+```
+"scripts":
+  "test-e2e": "NODE_ENV=production mocha ..."
+}
+```
+
+### Retractor Client API
+//TODO
+`__retractor.findDOMNodes()`
+
+
 ### Integrating with Selene
 
-Working with the plain webdriver API like in the example above is often quite verbose. Retractor provides bindings for [Selene][3], a 100% backwards compatible wrapper around the official Selenium driver. With Selene the very same example can be written as:
+Working with the plain webdriver API like in the example above is often quite verbose. Retractor provides a plugin for [Selene][3], a 100% backwards compatible wrapper around the official Selenium driver. With Selene the very same example can be written as:
 
 ```js
 import React from 'react';
@@ -80,37 +137,6 @@ se.findAll(<TodoItem />);
 // Find one TodoItem with a given text
 se.find(<TodoItem todo={{ text: 'Use retractor' }} />);
 ```
-
-## Features
-
-### Filter by props
-
-```js
-  se.find(<TodoItem todo={{ title: /retractor/ }} />);
-  se.find(<TodoItem todo={{ title: /retractor/, completed: false }} />);
-  se.find(<TodoItem editing />);
-```
-
-Using [deep-match][5] ...
-
-NOTE: note on React warnings
-
-```
-"scripts":
-  "test-e2e": "NODE_ENV=production mocha ..."
-}
-```
-
-### Scoped lookups
-
-```js
-  se.find(<TodoList key="1" />).findAll(<TodoItem todo={{completed: true}} />);
-```
-
-## Integrating with unexpected-webdriver
-
-...
-
 
 [1]: https://en.wikipedia.org/wiki/Retractor_(medical)
 [2]: https://github.com/SeleniumHQ/selenium
