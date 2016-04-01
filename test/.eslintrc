@@ -7,6 +7,7 @@
     "modules": true
   },
   "rules": {
+    "react/prefer-stateless-function": 0,
     "react/react-in-jsx-scope": 0,
     "no-unused-vars": [
       "error", { "varsIgnorePattern": "retractor" }
