@@ -3,9 +3,9 @@ import { pluralize } from './utils';
 
 import { ALL_TODOS, ACTIVE_TODOS, COMPLETED_TODOS } from './constants';
 
-const isAllSelected = route => route === ALL_TODOS ? 'selected' : '';
-const isActiveSelected = route => route === ACTIVE_TODOS ? 'selected' : '';
-const isCompletedSelected = route => route === COMPLETED_TODOS ? 'selected' : '';
+const isAllSelected = route => (route === ALL_TODOS ? 'selected' : '');
+const isActiveSelected = route => (route === ACTIVE_TODOS ? 'selected' : '');
+const isCompletedSelected = route => (route === COMPLETED_TODOS ? 'selected' : '');
 
 function TodoFooter({ count, completedCount, onClearCompleted, route }) {
   const activeTodoWord = pluralize(count, 'item');

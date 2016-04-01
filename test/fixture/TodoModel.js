@@ -41,9 +41,11 @@ export default class TodoModel {
   }
 
   toggle(todoToToggle) {
-    this.todos = this.todos.map(todo => todo !== todoToToggle ?
-      todo : Object.assign({}, todo, { completed: !todo.completed })
-    );
+    this.todos = this.todos.map(todo => (
+      todo !== todoToToggle
+        ? todo
+        : Object.assign({}, todo, { completed: !todo.completed })
+    ));
     this.inform();
   }
 
@@ -53,9 +55,11 @@ export default class TodoModel {
   }
 
   save(todoToSave, text) {
-    this.todos = this.todos.map(todo => todo !== todoToSave ?
-      todo : Object.assign({}, todo, { title: text })
-    );
+    this.todos = this.todos.map(todo => (
+      todo !== todoToSave
+        ? todo
+        : Object.assign({}, todo, { title: text })
+    ));
     this.inform();
   }
 
