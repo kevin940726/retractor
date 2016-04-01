@@ -3,26 +3,25 @@
 Retractor exposes the internals of a React application for end-to-end testing purposes. This allows you to select DOM nodes based on the name of the React Component that rendered the node as well as its state or properties.
 
 
-> A retractor is a surgical instrument with which a surgeon can either actively separate the edges of a surgical incision or wound, or can hold back underlying organs and tissues, so that body parts under the incision may be accessed. – [Wikipedia][1]
+> A retractor is a surgical instrument with which a surgeon can either actively separate the edges of a surgical incision or wound, or can hold back underlying organs and tissues, so that body parts under the incision may be accessed. – [Wikipedia][wikipedia]
 
 ![retractor](retractor.png)
 
 ## Installation
 
-```javascript
-npm install --save retractor
+First install Retractor as (dev-)dependency via npm:
+
+```
+npm install --save-dev retractor
 ```
 
-### Setup
-
-Retractor uses the React Dev-Tools hooks to expose your app's internals. In order for this to work, Retractor must be loaded before React gets initialized.
-
-In a [webpack][4] based setup this can be achieved by adding `retractor/client` to the beginning of the `entry` array:
+Next include retractor in your page __before__ React gets loaded. In a [webpack](https://webpack.github.io/) based setup this can be achieved by adding `'retractor'` to the beginning of the `entry` array:
 
 ```javascript
-module.exports = {
+// webpack.config.js
+
+var config = {
   entry: [
-    'retractor/client',
     './index' //your application entry
   ],
   output: {},
@@ -30,116 +29,54 @@ module.exports = {
   module: {
     loaders: []
   }
+};
+
+// Add retractor if not running in production
+if (process.env.NODE_ENV !== 'production') {
+  config.entry.unshift('retractor');
 }
+
+module.exports = config;
 ```
 
 You can verify that Retractor is installed by typing `__retractor` in your Browser's console.
 
-### Interacting with Retractor via Selenium
 
-Once your app exposes the Retractor API you can interact with it via Selenium:
+## Usage
+
+Once Retractor is included in your page you can use it in your Selenium tests. In order to do so, you have to add a [jsx pragma](http://babeljs.io/docs/plugins/transform-react-jsx/#custom) to your tests:
 
 ```js
-import React from 'react';
-import byJSX from 'retractor';
+/* @jsx retractor */
+
+```
+
+With this setting, JSX expressions will no longer translate into `React.createElement()` calls, but will use `retractor()` instead.
+
+This in turn will create a locator function that can be passed to the WebDriver [`findElement()`](http://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/index_exports_WebDriver.html#findElement) method.
+
+```js
 import webdriver from 'selenium-webdriver';
+import retractor from 'retractor';
+import TodoItem from './components/TodoItem';
 
-import TodoItem from '../components/TodoItem';
+/* @jsx retractor */
 
-const driver = new webdriver.Builder().forBrowser('phantomjs').build();
+const driver = new webdriver.Builder().forBrowser('firefox').build();
 
 driver.get('http://localhost:3000/');
 
 // Find all TodoItems
-driver.findElements(byJSX(<TodoItem />));
+driver.findElements(<TodoItem />);
 
 // Find one TodoItem with a given text
-driver.findElement(byJSX(
-  <TodoItem todo={{ text: 'Use retractor' }} />
-));
+driver.findElement(<TodoItem todo={{ text: /Use retractor/ }} />);
 ```
 
-### Features
+Retractor uses [deep-match](https://www.npmjs.com/package/deep-match) to compare the specified props with the actual components. Props that are not mentioned in the locator are ignored. Functions and regular expressions in the locator will be run against the corresponding prop values.
 
-The Retractor JSX bindings allow to query the DOM nodes of your components in an intuitive way. You just have to write plain JSX expressions to search and filter the components you would like to interact with.
+[wikipedia]: https://en.wikipedia.org/wiki/Retractor_(medical)
 
-#### Query
-To query components you have to use the `byJSX` locator.
-By default it will return all the DOM nodes of the mounted components matching that expression.
+# License
 
-```js
-import byJSX from 'retractor';
-import webdriver from 'selenium-webdriver';
-
-const driver = new webdriver.Builder()
-
-driver.findElements(byJSX(<TodoItem />));
-```
-
-#### Filter by props
-It's also possible to filter components based on their internal data structure (props). Just define the filter criteria as props in the JSX expression. For example, given two TodoItems, calling `byJSX` with props `{complete: false}` will return the one but not the other.
-
-```js
-driver.findElements(byJSX(<TodoItem todo={{ title: 'retractor' }} />));
-driver.findElements(byJSX(<TodoItem todo={{ title: 'retractor', completed: false }} />));
-driver.findElements(byJSX(<TodoItem editing />));
-```
-
-Retractor uses [deep-match][5] internally to support sophisticated filtering. This also allows you to use RegEx patterns for your prop filters.
-
-```js
-driver.findElements(byJSX(<TodoItem todo={{ title: /retractor/ }} />))
-```
-
-#### Scoped lookups
-//TODO verify and document
-```js
-driver.findElements(
-  byJSX(<TodoApp model={{ key: 'todolist-2' }} />)).then(
-  byJSX(<TodoItem todo={{ title: /Retractor/ }} />)
-);
-```
-
-#### React warnings
-Note: While executing your tests you might encounter React warnings about not-fulfilled `propTypes` of components that you're trying to lookup. It's safe to ignore those because retractor never actually executes or mounts a component. It simply offers JSX syntax as syntactic sugar, which gets translated by retractor internally to perform the query.
-
-A workaround to disable the warnings is running your tests in a environment other than `development`
-
-```
-"scripts":
-  "test-e2e": "NODE_ENV=production mocha ..."
-}
-```
-
-### Retractor Client API
-//TODO
-`__retractor.findDOMNodes()`
-
-
-### Integrating with Selene
-
-Working with the plain webdriver API like in the example above is often quite verbose. Retractor provides a plugin for [Selene][3], a 100% backwards compatible wrapper around the official Selenium driver. With Selene the very same example can be written as:
-
-```js
-import React from 'react';
-import selene from 'selene';
-import retractor from 'retractor/selene';
-
-import TodoItem from '../components/TodoItem';
-
-const se = selene({browser: 'phantomjs'}).use(retractor);
-
-se.get('http://localhost:3000/');
-
-// Find all TodoItems
-se.findAll(<TodoItem />);
-
-// Find one TodoItem with a given text
-se.find(<TodoItem todo={{ text: 'Use retractor' }} />);
-```
-
-[1]: https://en.wikipedia.org/wiki/Retractor_(medical)
-[2]: https://github.com/SeleniumHQ/selenium
-[3]: https://github.com/LiquidLabsGmbH/selene
-[4]: https://github.com/webpack/webpack
-[5]: https://github.com/fgnass/deep-match
+MIT
