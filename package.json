@@ -32,6 +32,7 @@
   "scripts": {
     "fixture": "cd test/fixture && webpack -d",
     "lint": "eslint .",
-    "test": "mocha -t 60000 -r babel-register"
+    "mocha": "mocha -t 60000 -r babel-register",
+    "test": "npm run fixture && npm run lint && npm run mocha"
   }
 }
