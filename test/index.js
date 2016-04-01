@@ -1,20 +1,30 @@
+/* @jsx retractor */
+
+import webdriver from 'selenium-webdriver';
 import expect from 'unexpected';
-import React from 'react';
-import selene from 'selene';
-import retractor from '../selene';
 
 import TodoItem from './fixture/TodoItem';
 import TodoApp from './fixture/TodoApp';
 
+import retractor from '..';
+
 describe('retractor', () => {
-  const se = selene().use(retractor);
+  it('should return a function with a displayName', () => {
+    expect(<TodoItem key="item1" todo={{ text: /text/ }} completed />, 'to be a function')
+      .and('to have property', 'displayName',
+      "<TodoItem key={'item1'} todo={({ 'text': /text/ })} completed={true} />");
+  });
+});
+
+describe('todo app', () => {
+  const driver = new webdriver.Builder().forBrowser('phantomjs').build();
 
   beforeEach(() =>
-    se.goto(`file://${__dirname}/fixture/index.html`)
+    driver.get(`file://${__dirname}/fixture/index.html`)
   );
 
   beforeEach(() => {
-    se.executeScript(() => {
+    driver.executeScript(() => {
       const list1 = [
         {
           id: '31202915-f2e7-4506-a96a-8acdf3d2a680',
@@ -40,43 +50,27 @@ describe('retractor', () => {
       localStorage.setItem('todolist-1', JSON.stringify(list1));
       localStorage.setItem('todolist-2', JSON.stringify(list2));
     });
-    return se.navigate().refresh();
+    return driver.navigate().refresh();
   });
 
   it('should find a single element', () => {
-    const item = se.find(<TodoItem />);
-    return expect(item, 'when fulfilled', 'to be a', selene.webdriver.WebElement);
+    const item = driver.findElement(<TodoItem />);
+    return expect(item, 'when fulfilled', 'to be a', webdriver.WebElement);
   });
 
   it('should find a single element by props', () => {
-    const item = se.find(<TodoItem todo={{ title: /React/ }} />);
-    return expect(item, 'when fulfilled', 'to be a', selene.webdriver.WebElement);
+    const item = driver.findElement(<TodoItem todo={{ title: /React/ }} />);
+    return expect(item, 'when fulfilled', 'to be a', webdriver.WebElement);
   });
 
   it('should find all elements', () => {
-    const items = se.findAll(<TodoItem />);
+    const items = driver.findElements(<TodoItem />);
     return expect(items, 'when fulfilled', 'to have length', 4);
   });
 
-  it('should provide a descriptive error message', () => {
-    const item = se.find(<TodoItem todo={{ title: /Not found/ }} />);
-    return expect(item, 'when rejected', 'to have message',
-      /No such element: <TodoItem props=\{\(\{ \'todo\': \{ \'title\': \/Not found\/ \} \}\)\} \/>/
-    );
-  });
-
-  it('should support selene filters', () => {
-    se.goto(`file://${__dirname}/fixture/index.html#/active`);
-
-    const items = se.findAll(
-      'li', { text: /^Use Retractor$/ }
-    );
-    return expect(items, 'when fulfilled', 'to have length', 1);
-  });
-
   it('should limit results to the given scope', () => {
-    const el = se.find(<TodoApp model={{ key: 'todolist-2' }} />)
-                 .find(<TodoItem todo={{ title: /Retractor/ }} />);
+    const el = driver.findElement(<TodoApp model={{ key: 'todolist-2' }} />)
+      .findElement(<TodoItem todo={{ title: /Retractor/ }} />);
     return expect(el.getText(), 'to be fulfilled with', 'Use Retractor Scoping');
   });
 });
