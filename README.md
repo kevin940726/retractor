@@ -1,5 +1,7 @@
 # E2E Testing for React Apps
 
+[![Build Status](https://travis-ci.org/LiquidLabsGmbH/retractor.svg?branch=master)](https://travis-ci.org/LiquidLabsGmbH/retractor)
+
 Retractor exposes the internals of a React application for end-to-end testing purposes. This allows you to select DOM nodes based on the name of the React Component that rendered the node as well as its state or properties.
 
 
