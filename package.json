@@ -1,6 +1,6 @@
 {
   "name": "retractor",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Expose react internals for E2E testing",
   "repository": "LiquidLabsGmbH/retractor",
   "main": "lib",
