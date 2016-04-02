@@ -19,20 +19,17 @@ if (devtools) {
 }
 
 function inject(renderer) {
-  window.__retractor = {
-    renderer: renderer,
-    findDOMNodes: function (name, filter, scope) {
-      return findComponentsInternal(renderer, name)
-        .filter(function (inst) {
-          return !filter || deepMatch(inst, filter);
-        })
-        .map(function (inst) {
-          return renderer.Mount.getNodeFromInstance(inst);
-        })
-        .filter(function (node) {
-          return !scope || scope.contains(node);
-        });
-    }
+  window.__retractor = function (name, filter, scope) {
+    return findComponentsInternal(renderer, name)
+      .filter(function (inst) {
+        return !filter || deepMatch(inst, filter);
+      })
+      .map(function (inst) {
+        return renderer.Mount.getNodeFromInstance(inst);
+      })
+      .filter(function (node) {
+        return !scope || scope.contains(node);
+      });
   };
 }
 
