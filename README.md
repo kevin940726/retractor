@@ -9,12 +9,32 @@ Retractor exposes the internals of a React application for end-to-end testing pu
 
 ![retractor](retractor.png)
 
+## Example
+
+```js
+import webdriver from 'selenium-webdriver';
+import retractor from 'retractor';
+import TodoItem from './components/TodoItem';
+
+/* @jsx retractor */
+
+const driver = new webdriver.Builder().forBrowser('firefox').build();
+
+driver.get('http://localhost:3000/');
+
+// Find all TodoItems
+driver.findElements(<TodoItem />);
+
+// Find one TodoItem with a given text
+driver.findElement(<TodoItem todo={{ text: /Use retractor/ }} />);
+```
+
 ## Installation
 
-First install Retractor as (dev-)dependency via npm:
+First install Retractor via npm:
 
 ```
-npm install --save-dev retractor
+$ npm install --save-dev retractor
 ```
 
 Next include retractor in your page __before__ React gets loaded. In a [webpack](https://webpack.github.io/) based setup this can be achieved by adding `'retractor'` to the beginning of the `entry` array:
@@ -50,30 +70,11 @@ Once Retractor is included in your page you can use it in your Selenium tests. I
 
 ```js
 /* @jsx retractor */
-
 ```
 
 With this setting, JSX expressions will no longer translate into `React.createElement()` calls, but will use `retractor()` instead.
 
 This in turn will create a locator function that can be passed to the WebDriver [`findElement()`](http://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/index_exports_WebDriver.html#findElement) method.
-
-```js
-import webdriver from 'selenium-webdriver';
-import retractor from 'retractor';
-import TodoItem from './components/TodoItem';
-
-/* @jsx retractor */
-
-const driver = new webdriver.Builder().forBrowser('firefox').build();
-
-driver.get('http://localhost:3000/');
-
-// Find all TodoItems
-driver.findElements(<TodoItem />);
-
-// Find one TodoItem with a given text
-driver.findElement(<TodoItem todo={{ text: /Use retractor/ }} />);
-```
 
 Retractor uses [deep-match](https://www.npmjs.com/package/deep-match) to compare the specified props with the actual components. Props that are not mentioned in the locator are ignored. Functions and regular expressions in the locator will be run against the corresponding prop values.
 
