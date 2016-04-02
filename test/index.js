@@ -53,6 +53,10 @@ describe('todo app', () => {
     return driver.navigate().refresh();
   });
 
+  it('should load the demo page', () =>
+    expect(driver.getTitle(), 'to be fulfilled with', 'Retractor Todo App')
+  );
+
   it('should find a single element', () => {
     const item = driver.findElement(<TodoItem />);
     return expect(item, 'when fulfilled', 'to be a', webdriver.WebElement);
