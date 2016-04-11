@@ -25,7 +25,8 @@ function inject(renderer) {
         return !filter || deepMatch(inst, filter);
       })
       .map(function (inst) {
-        return renderer.Mount.getNodeFromInstance(inst);
+        return renderer.ComponentTree.getNodeFromInstance(
+          inst._reactInternalInstance._renderedComponent);
       })
       .filter(function (node) {
         return !scope || scope.contains(node);
