@@ -27,7 +27,7 @@
     "webpack": "^1.12.14"
   },
   "peerDependencies": {
-    "react": "^15.0.1"
+    "react": "^0.14.7"
   },
   "scripts": {
     "fixture": "cd test/fixture && webpack -d",
