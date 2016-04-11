@@ -6,6 +6,12 @@
   "main": "lib",
   "browser": "./client",
   "license": "MIT",
+  "authors": [
+    "Felix Gnass <f.gnass@liquidlabs.de> (https://github.com/fgnass)",
+    "Andreas Taube <andreas.taube@codecentric.de> (https://github.com/ataube)",
+    "Christopher Flöß (https://github.com/flooose)",
+    "Sebastian Warmbrunn (https://github.com/sebashwa)"
+  ],
   "dependencies": {
     "deep-match": "^1.0.0",
     "escodegen": "^1.8.0",
