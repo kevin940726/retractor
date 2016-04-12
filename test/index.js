@@ -79,7 +79,7 @@ describe('todo app', () => {
     return expect(el.getText(), 'to be fulfilled with', 'Use Retractor Scoping');
   });
 
-  it('should resolve properties injected by higher order components', () => {
+  it('should resolve properties injected by redux connected components', () => {
     const el = driver.findElement(<Header placeholder={/What needs to be done/} />);
     return expect(el, 'when fulfilled', 'to be a', webdriver.WebElement);
   });

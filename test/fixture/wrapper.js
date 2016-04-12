@@ -16,6 +16,7 @@ export const wrapper = (WrappedComponent) => {
   });
 
   Wrapper.displayName = `Wrapper(${WrappedComponent.displayName})`;
+  Wrapper.WrappedComponent = WrappedComponent;
 
   return Wrapper;
 };
