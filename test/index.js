@@ -15,6 +15,12 @@ describe('retractor', () => {
       .and('to have property', 'displayName',
       "<TodoItem key={'item1'} todo={({ 'text': /text/ })} completed={true} />");
   });
+
+  it('shows in the displayName that it is a wrapped component', () => {
+    expect((<Header key="item1" todo={{ text: /text/ }} completed />), 'to be a function')
+      .and('to have property', 'displayName',
+      "<Wrapper(Header) or Header key={'item1'} todo={({ 'text': /text/ })} completed={true} />");
+  });
 });
 
 describe('todo app', () => {
